@@ -10,7 +10,7 @@
     authentication
       .logout()
       .error(function(err){
-        alert(err);
+        alert(err.error? err.error : err);
       })
       .then(function(){
         $location.path('');

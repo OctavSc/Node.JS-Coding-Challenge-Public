@@ -21,10 +21,7 @@
 
       if(token){
         payload = token.split('.')[1];
-        payload = $window.atob(payload);
-        payload = JSON.parse(payload);
-
-        return payload.exp > Date.now() / 1000;
+        return !!payload;
       } else {
         return false;
       }
@@ -34,7 +31,6 @@
       if(isLoggedIn()){
         var token = getToken();
         var payload = token.split('.')[1];
-        payload = $window.atob(payload);
         payload = JSON.parse(payload);
         return {
           email : payload.email,
@@ -57,7 +53,11 @@
 
     logout = function() {
       if( isLoggedIn() ) {
-        return $http.post('/api/logout', currentUser()).success(function () {
+        return $http.get('/api/logout', {
+          headers: {
+            Authorization: 'Bearer '+ getToken()
+          }
+        }).success(function () {
           $window.localStorage.removeItem('mean-token');
         });
       } else {
